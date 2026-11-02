@@ -1,48 +1,48 @@
 # unslop-mn
 
-Монгол хэлтэй интерфейст зориулсан [unslop](https://github.com/heydamir/unslop)-ийн хувилбар. Эх skill-ийг Damir Sokolovsky ([@heydamir](https://x.com/heydamir)) бүтээсэн.
+Монгол хэл дээрх UI-д зориулан өргөтгөсөн [unslop](https://github.com/heydamir/unslop) skill. Эх хувилбарыг Damir Sokolovsky ([@heydamir](https://x.com/heydamir)) бүтээсэн.
 
-unslop бол Claude Code болон Codex-д зориулсан skill. AI-аар хийсэн, "AI-ын үнэр"-тэй хуудсыг (ягаан градиент, гэрэлтэлт, эможи, хашгирсан текст, жигд бус зай) дизайнер хийсэн мэт болгодог. Энэ хувилбар монгол текст, тоо, огноо, ₮, кирилл фонтын дүрмүүдийг нэмсэн.
+unslop нь Claude Code болон Codex-д зориулсан skill юм. AI ашиглан хийсэн, vibecoded UI-д түгээмэл тохиолддог AI slop буюу gradient, glow, emoji, хэт сүржин copy, жигд бус spacing зэргийг илрүүлж, тухайн бүтээгдэхүүнд тохирсон design болгон засдаг. Энэ хувилбарт монгол copy, тоо, огноо, ₮ тэмдэгт болон Cyrillic font-той холбоотой дүрмүүдийг нэмсэн.
 
-## Эх хувилбараас юугаараа ялгаатай вэ
+## Эх хувилбараас ялгарах зүйлс
 
-- [mongolian.md](skills/unslop/references/mongolian.md): монгол slop-ийн шинж, товчны үгийн хэлбэр, ₮ ба огнооны формат, гарагийн товчлол, Ө ба Ү үсэг дэмждэг фонт, `lang="mn"`
-- [SKILL.md](skills/unslop/SKILL.md): аудит хийх алхам болон эцсийн шалгах жагсаалтаас mongolian.md руу холбосон
-- [tokens.md](skills/unslop/references/tokens.md): кирилл дэмждэггүй фонтын тухай анхааруулга
-- Монгол жишээ, өмнө ба дараа: [dashboard-mn.html](examples/dashboard-mn.html) → [dashboard-mn-unslopped.html](examples/dashboard-mn-unslopped.html)
+- [mongolian.md](skills/unslop/references/mongolian.md): монгол UI дахь slop-ийн шинж тэмдэг, button-ий текстийн хэлбэр, ₮ болон огнооны формат, гарагийн товчлол, Ө, Ү үсэг дэмждэг font, `lang="mn"` тохиргоо
+- [SKILL.md](skills/unslop/SKILL.md): Audit алхам болон Checklist-д mongolian.md-ийн холбоосыг нэмсэн
+- [tokens.md](skills/unslop/references/tokens.md): Cyrillic дэмждэггүй font-ын талаарх анхааруулга
+- Монгол жишээ (before / after): [dashboard-mn.html](examples/dashboard-mn.html) → [dashboard-mn-unslopped.html](examples/dashboard-mn-unslopped.html)
 
-## Суулгах
+## Суулгах заавар
 
-Claude Code-д бүх төсөлд ашиглах бол:
+Claude Code-ийн бүх төсөлд (global) ашиглах бол:
 
 ```bash
 git clone https://github.com/Ulziisuren/unslop-mn
 mkdir -p ~/.claude/skills && cp -r unslop-mn/skills/unslop ~/.claude/skills/
 ```
 
-Зөвхөн нэг төсөлд ашиглах бол тухайн төслийн `.claude/skills/` хавтсанд хуулна.
+Зөвхөн тодорхой нэг төсөлд ашиглах бол тухайн төслийн `.claude/skills/` фолдерт хуулна.
 
-Сайтын snapshot авах эсвэл story видео хийх бол Playwright болон ffmpeg хэрэгтэй:
+Live сайтын snapshot авах эсвэл story video үүсгэхэд Playwright болон ffmpeg шаардлагатай:
 
 ```bash
 npm install -D playwright
 npx playwright install chromium
 ```
 
-## Ашиглах
+## Хэрэглээ
 
-Claude Code-д `/unslop` гэж бичээд юу хийлгэхээ хэлнэ:
+Claude Code дээр `/unslop` командын араас хийлгэх ажлаа бичнэ:
 
 ```
-/unslop энэ dashboard-ыг цэвэрлэ
-/unslop https://example.mn сайтын нүүр хэсгийг
+/unslop энэ dashboard-ийг засварла
+/unslop https://example.mn сайтын hero хэсгийг засварла
 ```
 
-Юу ч өөрчлөхөөс өмнө аудит болон чиглэлээ харуулаад таны зөвшөөрлийг авна.
+Skill нь өөрчлөлт хийхээс өмнө audit болон direction-оо танилцуулж, таны зөвшөөрлийг авна.
 
-## Лиценз
+## License
 
-[CC BY 4.0](LICENSE). Энэ бол Damir Sokolovsky-гийн [unslop](https://github.com/heydamir/unslop)-ийг өөрчилсөн хувилбар. Хуулж, өөрчилж ашиглахдаа эх зохиогчийг дурдаж, эх репо руу холбоос тавина уу.
+[CC BY 4.0](LICENSE). Энэхүү repository нь Damir Sokolovsky-ийн [unslop](https://github.com/heydamir/unslop)-ийг өөрчилж боловсруулсан хувилбар юм. Хуулбарлах, өөрчлөх, түгээхдээ эх зохиогчийг дурдаж, эх repository-ийн холбоосыг хавсаргана уу.
 
 ---
 
