@@ -2,7 +2,7 @@
 
 Монгол хэл дээрх UI-д зориулан өргөтгөсөн [unslop](https://github.com/heydamir/unslop) skill. Эх хувилбарыг Damir Sokolovsky ([@heydamir](https://x.com/heydamir)) бүтээсэн.
 
-unslop нь Claude Code болон Codex-д зориулсан skill юм. AI ашиглан хийсэн, vibecoded UI-д түгээмэл тохиолддог AI slop буюу gradient, glow, emoji, хэт сүржин copy, жигд бус spacing зэргийг илрүүлж, тухайн бүтээгдэхүүнд тохирсон design болгон засдаг. Энэ хувилбарт монгол copy, тоо, огноо, ₮ тэмдэгт болон Cyrillic font-той холбоотой дүрмүүдийг нэмсэн.
+unslop нь Claude Code болон Codex-д зориулсан skill юм. AI ашиглан хийсэн, vibecoded UI-д түгээмэл тохиолддог AI slop буюу gradient, glow, emoji, анхаарал татах гэж хэт оролдсон текст (`!!`, ТОМ ҮСЭГ, "гайхалтай", "хувьсгалт" гэх мэт үгс), жигд бус spacing зэргийг илрүүлж, тухайн бүтээгдэхүүнд тохирсон design болгон засдаг. Энэ хувилбарт монгол текст, тоо, огноо, ₮ тэмдэгт болон Cyrillic font-той холбоотой дүрмүүдийг нэмсэн.
 
 ## Эх хувилбараас ялгарах зүйлс
 
