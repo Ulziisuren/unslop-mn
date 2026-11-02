@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="mn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EmberAI · Тойм</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- IBM Plex covers Mongolian Cyrillic, including Ө ө Ү ү -->
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        /* Graphite ramp */
+        --deep: #0f0f10;
+        --page: #141415;
+        --card: #19191b;
+        --raised: #232325;
+        --hairline: rgba(237, 237, 237, 0.08);
+        --text: #ededed;
+        --text-2: #a1a1a6;
+        --muted: #85858b;
+        /* Ember accent, used for the selection, the chart peak and overdue */
+        --ember: #f0883e;
+        --positive: #4cc38a;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --sans: "IBM Plex Sans", system-ui, sans-serif;
+        --mono: "IBM Plex Mono", ui-monospace, monospace;
+      }
+
+      * { box-sizing: border-box; margin: 0; }
+
+      body {
+        min-height: 100vh;
+        padding: 32px;
+        background: #0b0b0c;
+        color: var(--text);
+        font-family: var(--sans);
+        font-size: 14px;
+        line-height: 20px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .window {
+        display: flex;
+        max-width: 1280px;
+        min-height: 820px;
+        margin: 0 auto;
+        overflow: hidden;
+        border: 1px solid var(--hairline);
+        border-radius: 16px;
+        background: var(--page);
+      }
+
+      /* Sidebar */
+
+      aside {
+        display: flex;
+        flex-direction: column;
+        width: 256px;
+        flex-shrink: 0;
+        padding: 16px 12px;
+        border-right: 1px solid var(--hairline);
+        background: var(--deep);
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 36px;
+        padding: 0 8px;
+      }
+      .brand-mark {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        background: var(--ember);
+      }
+      .brand-name { font-size: 16px; font-weight: 600; }
+      .icon-button {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        margin-left: auto;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        transition: background-color 150ms var(--ease), color 150ms var(--ease);
+      }
+      .icon-button:hover { background: var(--raised); color: var(--text); }
+
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 36px;
+        margin-top: 16px;
+        padding: 0 8px 0 12px;
+        border: 1px solid var(--hairline);
+        border-radius: 8px;
+        background: var(--card);
+        color: var(--muted);
+      }
+      .search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        outline: none;
+      }
+      .search input::placeholder { color: var(--muted); }
+      .search:focus-within { border-color: rgba(237, 237, 237, 0.24); }
+
+      .keycap {
+        padding: 0 6px;
+        border: 1px solid var(--hairline);
+        border-radius: 4px;
+        background: var(--raised);
+        color: var(--text-2);
+        font-family: var(--mono);
+        font-size: 12px;
+        line-height: 18px;
+      }
+
+      .section-label {
+        margin: 24px 0 8px;
+        padding: 0 8px;
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      nav, .plans { display: flex; flex-direction: column; gap: 2px; }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        height: 36px;
+        padding: 0 8px;
+        border-radius: 8px;
+        color: var(--text-2);
+        text-decoration: none;
+        transition: background-color 150ms var(--ease), color 150ms var(--ease);
+      }
+      a.row:hover { background: var(--raised); color: var(--text); }
+      a.row:focus-visible { outline: 2px solid var(--ember); outline-offset: -2px; }
+      .row.active {
+        background: var(--raised);
+        color: var(--text);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+      .row svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--muted); }
+      .row.active svg { color: var(--ember); }
+      .row .count {
+        margin-left: auto;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* Main */
+
+      main {
+        flex: 1;
+        min-width: 0;
+        padding: 24px 32px 32px;
+        animation: enter 400ms var(--ease) both;
+      }
+      @keyframes enter {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: none; }
+      }
+
+      .crumb { color: var(--muted); font-size: 13px; }
+      h1 {
+        margin-top: 4px;
+        font-size: 32px;
+        line-height: 1.15;
+        font-weight: 500;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 16px;
+        margin-top: 32px;
+      }
+
+      .card {
+        position: relative;
+        overflow: hidden;
+        padding: 20px 24px;
+        border: 1px solid var(--hairline);
+        border-radius: 16px;
+        background: var(--card);
+      }
+      .label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-2);
+        font-size: 13px;
+      }
+      .figure {
+        margin-top: 8px;
+        font-size: 32px;
+        line-height: 1;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+      }
+      .change { margin-top: 12px; color: var(--muted); font-size: 13px; }
+      .change b { color: var(--positive); font-weight: 500; }
+
+      /* Signature: an ember dot marks what is overdue */
+      .ember-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--ember);
+      }
+
+      /* Moment: a paid receipt next to the paid figure */
+      .receipt {
+        position: absolute;
+        top: 20px;
+        right: 32px;
+        width: 128px;
+        padding: 12px;
+        border-radius: 4px 4px 0 0;
+        background: #f3efe6;
+        color: #3a352d;
+        font-family: var(--mono);
+        font-size: 11px;
+        line-height: 16px;
+        transform: rotate(3deg);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      }
+      .receipt::after {
+        /* torn bottom edge */
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -6px;
+        height: 6px;
+        background:
+          linear-gradient(-45deg, transparent 4px, #f3efe6 0) 0 0 / 8px 6px repeat-x,
+          linear-gradient(45deg, transparent 4px, #f3efe6 0) 0 0 / 8px 6px repeat-x;
+      }
+      .receipt .line { height: 4px; margin-top: 6px; border-radius: 2px; background: #d9d2c4; }
+      .receipt .line.short { width: 60%; }
+      .receipt .total {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px dashed #c9c1b0;
+        font-weight: 500;
+      }
+      .receipt .stamp {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 0 6px;
+        border: 1px solid #b4652a;
+        border-radius: 4px;
+        color: #b4652a;
+        font-weight: 500;
+      }
+
+      /* Main chart */
+
+      .chart-card { margin-top: 16px; }
+      .chart-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+      .chart-note { color: var(--muted); font-size: 13px; text-align: right; }
+
+      .chart {
+        position: relative;
+        height: 280px;
+        margin-top: 24px;
+      }
+      .grid {
+        position: absolute;
+        inset: 0 0 28px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .grid span { height: 1px; background: var(--hairline); }
+      .bars {
+        position: absolute;
+        inset: 0 0 28px;
+        display: flex;
+        align-items: flex-end;
+        gap: 24px;
+      }
+      .bar {
+        flex: 1;
+        max-width: 64px;
+        margin: 0 auto;
+        border-radius: 4px 4px 0 0;
+        background: #3a3a3e;
+      }
+      .bar.peak { background: var(--ember); }
+      .days {
+        position: absolute;
+        inset: auto 0 0;
+        display: flex;
+        gap: 24px;
+        color: var(--muted);
+        font-family: var(--mono);
+        font-size: 12px;
+      }
+      .days span { flex: 1; max-width: 64px; margin: 0 auto; text-align: center; }
+      .days .peak { color: var(--text); }
+
+      @media (max-width: 860px) {
+        body { padding: 0; }
+        .window { flex-direction: column; border-radius: 0; border: 0; }
+        aside { width: auto; border-right: 0; border-bottom: 1px solid var(--hairline); }
+        main { padding: 24px 16px; }
+        .stats { grid-template-columns: 1fr; }
+        .receipt { display: none; }
+        .plans, .plans-label { display: none; }
+        .bars, .days { gap: 8px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        main { animation: none; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="window">
+      <aside>
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">EmberAI</span>
+          <button class="icon-button" type="button" aria-label="Мэдэгдэл">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
+          </button>
+        </div>
+
+        <label class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+          <input type="search" placeholder="Хайх" aria-label="Хайх" />
+          <kbd class="keycap">⌘K</kbd>
+        </label>
+
+        <p class="section-label">Цэс</p>
+        <nav>
+          <a href="#" class="row active" aria-current="page">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+            Тойм
+          </a>
+          <a href="#" class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></svg>
+            Ирсэн
+            <span class="count">12</span>
+          </a>
+          <a href="#" class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" /></svg>
+            Төслүүд
+          </a>
+          <a href="#" class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+            Харилцагчид
+          </a>
+          <a href="#" class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" /><path d="M14 2v6h6" /><path d="M8 13h8" /><path d="M8 17h5" /></svg>
+            Нэхэмжлэх
+          </a>
+          <a href="#" class="row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18" /><path d="M8 17V11" /><path d="M13 17V7" /><path d="M18 17v-4" /></svg>
+            Тайлан
+          </a>
+        </nav>
+
+        <p class="section-label plans-label">Багцууд</p>
+        <div class="plans">
+          <div class="row">Байгууллага <span class="count">18</span></div>
+          <div class="row">Бизнес <span class="count">64</span></div>
+          <div class="row">Про <span class="count">210</span></div>
+          <div class="row">Эхлэл <span class="count">480</span></div>
+          <div class="row">Үнэгүй <span class="count">1,200</span></div>
+        </div>
+      </aside>
+
+      <main>
+        <p class="crumb">Тойм</p>
+        <h1>2026 оны 11-р сар</h1>
+
+        <section class="stats">
+          <div class="card">
+            <p class="label">Энэ сард төлөгдсөн</p>
+            <p class="figure">48,210,000₮</p>
+            <p class="change"><b>+12%</b> өмнөх сараас</p>
+            <div class="receipt" aria-hidden="true">
+              <div class="line"></div>
+              <div class="line short"></div>
+              <div class="line"></div>
+              <div class="total"><span>Нийт</span><span class="line short" style="width: 40%; margin: 6px 0 0"></span></div>
+              <span class="stamp">Төлсөн</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <p class="label"><span class="ember-dot" aria-hidden="true"></span>Хугацаа хэтэрсэн</p>
+            <p class="figure">7</p>
+            <p class="change">өмнөх сараас 3-аар цөөн</p>
+          </div>
+        </section>
+
+        <section class="card chart-card">
+          <div class="chart-head">
+            <div>
+              <p class="label">Нийт орлого</p>
+              <p class="figure">124,860,000₮</p>
+              <p class="change"><b>+4.2%</b> өмнөх сараас</p>
+            </div>
+            <p class="chart-note">Энэ долоо хоногт Пүрэв гараг хамгийн өндөр</p>
+          </div>
+
+          <div class="chart" role="img" aria-label="Долоо хоногийн өдөр тутмын орлого, Пүрэв гараг хамгийн өндөр">
+            <div class="grid"><span></span><span></span><span></span><span></span></div>
+            <div class="bars">
+              <div class="bar" style="height: 53%"></div>
+              <div class="bar" style="height: 76%"></div>
+              <div class="bar" style="height: 59%"></div>
+              <div class="bar peak" style="height: 100%"></div>
+              <div class="bar" style="height: 72%"></div>
+              <div class="bar" style="height: 43%"></div>
+              <div class="bar" style="height: 64%"></div>
+            </div>
+            <div class="days">
+              <span>Да</span><span>Мя</span><span>Лх</span><span class="peak">Пү</span><span>Ба</span><span>Бя</span><span>Ня</span>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
