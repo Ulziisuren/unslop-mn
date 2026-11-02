@@ -81,6 +81,8 @@ Pick by the character in the direction. All of these are free, and a partner can
 
 A display serif belongs to large headlines only, never to labels or buttons.
 
+Not every family here covers Cyrillic. DM Sans, for one, serves Latin only, so Mongolian text falls back to a system font. For Mongolian or other Cyrillic interfaces, pick from the families listed in [mongolian.md](mongolian.md) instead of this table.
+
 ## Type scale
 
 | Use | Size | Line height | Weight |

@@ -33,6 +33,7 @@ Add these to the audit next to [signs.md](signs.md).
 - Pick one number format per screen. Thousands with a comma and decimals with a dot, like `48,210` and `3.5`, is the common choice.
 - Tugrik goes after the number with no space, like `48,210₮`. Use `төг` only if the product already does. Never mix `₮` and `MNT` on one screen.
 - Dates in one format per screen. Long form `2026 оны 10-р сарын 2`, short form `2026.10.02`. Month labels on charts `1-р сар` to `12-р сар`, or `1 сар` to `12 сар` when space is tight. Never English month names.
+- Weekdays on charts and calendars start on Monday and use two-letter abbreviations in sentence case, `Да Мя Лх Пү Ба Бя Ня`. Full names are `Даваа`, `Мягмар`, `Лхагва`, `Пүрэв`, `Баасан`, `Бямба`, `Ням`, with `гараг` added in running text, like `Пүрэв гараг`. Never English day names.
 - Times use 24 hours, like `14:30`.
 - Numbers still use `tabular-nums`.
 
